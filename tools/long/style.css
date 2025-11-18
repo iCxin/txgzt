@@ -1,0 +1,401 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', 'Microsoft YaHei', Arial, sans-serif;
+}
+
+body {
+    background-color: #f8f9fa;
+    padding: 30px 15px; /* 增加垂直边距 */
+}
+
+.container {
+    max-width: 1100px; /* 扩大最大宽度 */
+    margin: 0 auto;
+    background-color: #ffffff;
+    padding: 30px; /* 增加内边距 */
+    border-radius: 12px; /* 更圆润的边框 */
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08); /* 更柔和的阴影 */
+}
+
+h1 {
+    text-align: center;
+    color: #2c3e50; /* 更深的标题颜色 */
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #e9ecef; /* 更粗的分割线 */
+    font-size: 2.2rem; /* 增大标题字体 */
+}
+
+h2 {
+    font-size: 1.1rem; /* 调整子标题大小 */
+    margin-bottom: 12px;
+    color: #495057;
+    font-weight: 500; /* 中等字重 */
+}
+
+.input-container {
+    display: flex;
+    gap: 25px; /* 增大输入组间距 */
+    margin-bottom: 25px;
+}
+
+.input-group {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group textarea {
+    flex: 1;
+    min-height: 150px;
+}
+
+textarea {
+    width: 100%;
+    height: 350px; /* 增加输入框高度 */
+    padding: 15px; /* 增加内边距 */
+    border: 2px solid #e0e0e0; /* 更清晰的边框 */
+    border-radius: 8px; /* 输入框圆角 */
+    resize: vertical; /* 允许垂直调整大小 */
+    font-size: 15px;
+    line-height: 1.6;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+textarea:focus {
+    outline: none;
+    border-color: #42a5f5; /* 聚焦时的蓝色边框 */
+    box-shadow: 0 0 0 4px rgba(66, 165, 245, 0.1); /* 聚焦阴影 */
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px; /* 增大按钮间距 */
+    margin: 30px 0; /* 调整上下边距 */
+}
+
+button {
+    padding: 12px 28px; /* 增大按钮尺寸 */
+    border: none;
+    border-radius: 8px; /* 按钮圆角 */
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500; /* 中等字重 */
+    transition: all 0.3s;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* 默认阴影 */
+}
+
+#compareBtn {
+    background-color: #2196f3; /* 主按钮颜色 */
+    color: white;
+}
+
+#compareBtn:hover {
+    background-color: #1976d2; /* 悬停加深颜色 */
+    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.2); /* 悬停阴影 */
+}
+
+#clearBtn {
+    background-color: #f5f5f5;
+    color: #495057;
+}
+
+#clearBtn:hover {
+    background-color: #eeeeee;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* 悬停阴影 */
+}
+
+.result-container {
+    background-color: #f8f9fa; /* 结果区背景 */
+    padding: 20px;
+    border-radius: 8px;
+    border: none; /* 移除原有边框 */
+}
+
+#resultList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px; /* 增大结果项间距 */
+    padding: 10px 0;
+}
+
+.result-item {
+    background-color: #ffebee; /* 更柔和的红色背景 */
+    border: 1px solid #ef9a9a; /* 更浅的边框 */
+    color: #b71c1c; /* 文字颜色加深 */
+    padding: 6px 16px; /* 调整内边距 */
+    border-radius: 6px; /* 结果项圆角 */
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+}
+
+@media (max-width: 768px) {
+    .input-container {
+        flex-direction: column;
+        gap: 25px;
+    }
+    
+    textarea {
+        height: 250px; /* 移动端输入框高度 */
+    }
+
+    h1 {
+        font-size: 1.8rem; /* 移动端标题缩小 */
+    }
+
+    button {
+        padding: 10px 24px; /* 移动端按钮缩小 */
+        font-size: 15px;
+    }
+}
+
+
+/* 返回首页按钮样式 */
+/* 标题+按钮容器 */
+.header-container {
+    display: flex;
+    align-items: center;  /* 垂直居中对齐 */
+    justify-content: space-between;  /* 标题和按钮左右分布 */
+    margin-bottom: 30px;  /* 保持原有标题底部间距 */
+}
+
+/* 移除原固定定位样式，调整按钮容器 */
+.back-home-container {
+    position: static;  /* 取消固定定位 */
+    z-index: auto;     /* 恢复默认层级 */
+}
+
+/* 调整按钮内边距（与标题更协调） */
+/* 返回首页按钮样式优化 */
+.back-home-btn {
+    padding: 6px 14px;
+    font-size: 14px;
+    background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%); /* 蓝紫色渐变背景 */
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.3s;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.back-home-btn:hover {
+    transform: scale(1.05); /* 悬停轻微放大 */
+    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.2);
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    .header-container {
+        flex-direction: column;  /* 小屏幕下标题和按钮垂直排列 */
+        gap: 15px;
+    }
+    
+    h1 {
+        margin-bottom: 0;  /* 移除原标题底部边距 */
+    }
+}
+
+
+/* 结果区标题容器 */
+.result-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+/* 复制按钮样式 */
+#copyBtn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    background-color: #4caf50; /* 绿色主色 */
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+#copyBtn:hover {
+    background-color: #388e3c; /* 悬停加深 */
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
+}
+
+/* 预设名单区域美化 */
+.preset-list-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+#presetListSelect {
+    padding: 8px 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 15px;
+    background: #f5f7fa;
+    color: #333;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    outline: none;
+    min-width: 120px;
+}
+#presetListSelect:focus {
+    border-color: #42a5f5;
+    box-shadow: 0 0 0 3px rgba(66, 165, 245, 0.12);
+}
+#savePresetBtn {
+    background: linear-gradient(135deg, #42a5f5 0%, #1976d2 100%);
+    color: #fff;
+    font-size: 14px;
+    padding: 8px 18px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 2px 8px rgba(66, 165, 245, 0.10);
+}
+#savePresetBtn:hover {
+    background: linear-gradient(135deg, #1976d2 0%, #42a5f5 100%);
+    box-shadow: 0 4px 12px rgba(66, 165, 245, 0.18);
+}
+#deletePresetBtn {
+    background: linear-gradient(135deg, #ff5252 0%, #ff1744 100%);
+    color: #fff;
+    font-size: 14px;
+    padding: 8px 18px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 2px 8px rgba(255, 82, 82, 0.10);
+}
+#deletePresetBtn:hover {
+    background: linear-gradient(135deg, #ff1744 0%, #ff5252 100%);
+    box-shadow: 0 4px 12px rgba(255, 82, 82, 0.18);
+}
+
+/* 自定义弹窗样式 */
+.modal {
+    position: fixed;
+    z-index: 9999;
+    left: 0; top: 0; right: 0; bottom: 0;
+    background: rgba(44, 62, 80, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: modal-fadein 0.2s;
+}
+@keyframes modal-fadein {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+.modal-content {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(44,62,80,0.18);
+    padding: 32px 28px 22px 28px;
+    min-width: 320px;
+    max-width: 90vw;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 18px;
+}
+.modal-title {
+    font-size: 1.18rem;
+    font-weight: 600;
+    color: #1976d2;
+    margin-bottom: 2px;
+}
+.modal-label {
+    font-size: 1rem;
+    color: #495057;
+    margin-bottom: 2px;
+}
+.modal-input {
+    padding: 10px 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+.modal-input:focus {
+    border-color: #42a5f5;
+    box-shadow: 0 0 0 3px rgba(66, 165, 245, 0.12);
+}
+.modal-btn-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 14px;
+    margin-top: 8px;
+}
+#modalConfirmBtn {
+    background: linear-gradient(135deg, #42a5f5 0%, #1976d2 100%);
+    color: #fff;
+    font-size: 15px;
+    padding: 8px 22px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 2px 8px rgba(66, 165, 245, 0.10);
+}
+#modalConfirmBtn:hover {
+    background: linear-gradient(135deg, #1976d2 0%, #42a5f5 100%);
+    box-shadow: 0 4px 12px rgba(66, 165, 245, 0.18);
+}
+#modalCancelBtn {
+    background: #f5f5f5;
+    color: #495057;
+    font-size: 15px;
+    padding: 8px 22px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+#modalCancelBtn:hover {
+    background: #eeeeee;
+    color: #222;
+}
+
+.modal-tip {
+    font-size: 13px;
+    color: #888;
+    text-align: center;
+    margin-top: -8px;
+    margin-bottom: 2px;
+    line-height: 1.5;
+}
+
+.main-tip {
+    font-size: 15px;
+    color: #888;
+    text-align: center;
+    margin-top: -18px;
+    margin-bottom: 18px;
+    line-height: 1.6;
+}
+
+.modal-msg-text {
+    font-size: 1.08rem;
+    color: #333;
+    text-align: center;
+    margin: 10px 0 18px 0;
+    line-height: 1.7;
+    word-break: break-all;
+}

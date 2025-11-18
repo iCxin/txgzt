@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>团籍注册数据整理工具</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/xlsx/0.18.2/xlsx.full.min.js"></script>
+    <script src="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="form-section">
+            <div class="form-header">
+                <div class="form-header-left">
+                    <h2>团籍注册数据整理工具</h2>
+                    <p class="form-desc">自动整理团籍注册数据</p>
+                </div>
+                <div class="form-header-buttons"><a href="../../" class="back-home">返回主页</a><button type="button"
+                        class="help-btn" onclick="showTutorial();">使用说明</button><button type="button" class="help-btn"
+                        onclick="showAbout();">关于本站</button></div>
+            </div>
+            <div class="form-body">
+                <div class="input-group"><label>选择Excel文件</label>
+                    <div class="file-upload">
+                        <p id="fileName" class="file-name">请选择文件：要求为包含团籍注册数据的Excel表格</p>
+                        <div class="upload-buttons"><input type="file" id="fileInput" accept=".xls,.xlsx"
+                                style="display: none;"><button type="button" id="selectFileBtn"
+                                class="upload-btn">选择文件</button><button type="button" id="importBtn" class="upload-btn"
+                                disabled>导入数据</button></div>
+                        <p id="dataStatus" class="data-status"></p>
+                    </div>
+                </div>
+                <div class="input-group"><label>标题设置</label>
+                    <div class="title-input"><input type="text" id="titleInput" class="form-input"
+                            placeholder="如：5月13日团籍注册数据通报"></div>
+                </div>
+                <div class="input-group"><label>年级设置（最低保留年级）</label>
+                    <div class="grade-settings">
+                        <div class="grade-item"><label>建筑专业</label><input type="number" id="architectureGrade"
+                                placeholder="如：2020"></div>
+                        <div class="grade-item"><label>水利土木专业</label><input type="number" id="civilGrade"
+                                placeholder="如：2021"></div>
+                        <div class="grade-item"><label>研究生</label><input type="number" id="graduateGrade"
+                                placeholder="如：2022"></div>
+                    </div>
+                </div>
+                <div class="input-group"><label>显示设置</label>
+                    <div class="display-settings"><label class="switch-wrapper"><input type="checkbox"
+                                id="hideCompletedSwitch"><span class="switch-text">隐藏已完成注册的班级</span></label></div>
+                </div>
+            </div>
+        </div>
+        <div class="preview-section">
+            <div class="preview-header">
+                <div class="preview-header-left">
+                    <h3>数据预览</h3>
+                    <p class="preview-tip">提示：调整左侧筛选条件后会自动更新</p>
+                </div>
+                <div class="preview-tools"><button type="button" id="exportBtn" class="print-btn"
+                        disabled>导出Excel</button><button type="button" id="exportPdfBtn" class="print-btn"
+                        disabled>导出PDF</button></div>
+            </div>
+            <div class="preview-table" id="previewTable">
+                <table>
+                    <tr>
+                        <th colspan="7" style="font-size: 14px; font-weight: bold; text-align: center;">团籍注册数据整理</th>
+                    </tr>
+                    <tr>
+                        <th style="font-weight: bold; text-align: center;">年级</th>
+                        <th style="font-weight: bold; text-align: center;">组织名称</th>
+                        <th style="font-weight: bold; text-align: center;">应评议数</th>
+                        <th style="font-weight: bold; text-align: center;">应评已评率</th>
+                        <th style="font-weight: bold; text-align: center;">应注册数</th>
+                        <th style="font-weight: bold; text-align: center;">未注册数</th>
+                        <th style="font-weight: bold; text-align: center;">完成注册率</th>
+                    </tr>
+                    <tr>
+                        <td colspan="7" style="text-align: center; color: #999; padding: 20px;">请选择并导入Excel文件</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div id="tutorialModal" class="tutorial-modal">
+        <div class="tutorial-content">
+            <div class="tutorial-header">
+                <h3>使用说明</h3><button class="close-tutorial" onclick="closeTutorial();">×</button>
+            </div>
+            <div class="tutorial-body">
+                <div class="tutorial-section">
+                    <h4>使用步骤</h4>
+                    <ol>
+                        <li>点击"选择文件"按钮，选择需要整理的Excel表格</li>
+                        <li>设置标题，默认为"M月D日团籍注册数据通报"</li>
+                        <li>设置各专业最低保留年级</li>
+                        <li>点击"导入数据"按钮，系统将自动整理数据</li>
+                        <li>预览整理结果</li>
+                        <li>确认无误后，点击"导出Excel"按钮下载整理好的文件</li>
+                    </ol>
+                </div>
+                <div class="tutorial-section">
+                    <h4>数据处理说明</h4>
+                    <ul>
+                        <li>自动删除研究生、教职工、机关相关数据</li>
+                        <li>根据设置的年级自动过滤数据</li>
+                        <li>自动处理组织名称格式</li>
+                        <li>自动提取年级信息</li>
+                        <li>自动映射字段：应进行年度注册团员数→应注册数、未注册团员数→未注册数、完成团员年度注册率→完成注册率</li>
+                        <li>自动按年级和组织名称排序</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="aboutModal" class="tutorial-modal">
+        <div class="tutorial-content">
+            <div class="tutorial-header">
+                <h3>关于本站</h3><button class="close-tutorial" onclick="closeAbout();">×</button>
+            </div>
+            <div class="tutorial-body">
+                <div class="tutorial-section">
+                    <h4>功能介绍</h4>
+                    <p>本工具用于自动整理团籍注册数据，可以根据需要筛选出指定年级和专业的数据，也可以自动隐藏已完成团籍注册的班级。</p>
+                </div>
+                <div class="tutorial-section">
+                    <h4>数据安全说明</h4>
+                    <p>本工具在您的浏览器本地运行，所有数据处理都在您的设备上完成，不会上传到任何服务器。</p>
+                    <p>您的Excel文件和处理结果仅存储在您的浏览器内存中，关闭页面后将被清除。</p>
+                </div>
+                <div class="tutorial-section">
+                    <h4>开发者信息</h4>
+                    <p>开发者：CxinLiu</p>
+                    <p>版本：1.0.0</p>
+                    <p>更新日期：2024年6月</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="mobileWarning" class="mobile-warning">
+        <div class="mobile-warning-content">
+            <div class="warning-icon">⚠️</div>
+            <h3>建议使用电脑访问</h3>
+            <p>本工具需要处理Excel表格，在电脑上使用会获得更好的体验。</p><button class="warning-btn"
+                onclick="closeMobileWarning();">继续使用</button>
+        </div>
+    </div>
+    <div class="page-footer">
+        <div class="footer-content">
+            <div class="footer-links"><a href="https://beian.miit.gov.cn/" target="_blank">蜀ICP备2024051667号</a></div>
+            <div class="copyright">©️2020-2025 SCAU水利与土木工程学院团委组织部&CxinLiu. All Rights Reserved.</div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>

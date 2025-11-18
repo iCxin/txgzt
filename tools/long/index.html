@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>微信接龙对比工具</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header-container">  <!-- 新增标题+按钮容器 -->
+            <h1>微信接龙对比工具</h1>
+            <div class="main-tip">已更新至2.0版，可将常用名单设置为预设名单，避免每次都要找......</div>
+            <div class="back-home-container">
+                <a href="../.." class="back-home-btn">返回首页</a>
+            </div>
+        </div>
+        <div class="input-container">
+            <div class="input-group">
+                <h2>微信接龙数据</h2>
+                <textarea id="solitaireData" placeholder="请粘贴微信接龙数据，例如：&#10;#接龙&#10;已加入入团积极分子培训群&#10;&#10;1. 23水利3班张三&#10;2. 24土木1赵六&#10;..."></textarea>
+            </div>
+            <div class="input-group">
+                <h2>完整名单</h2>
+                <div class="preset-list-container">
+                    <select id="presetListSelect">
+                        <option value="">选择预设名单</option>
+                    </select>
+                    <button id="savePresetBtn">保存为预设</button>
+                    <button id="deletePresetBtn">删除预设</button>
+                </div>
+                <textarea id="fullList" placeholder="请粘贴完整名单，每行一个名字，例如：&#10;张三&#10;赵六&#10;钱一&#10;..."></textarea>
+            </div>
+        </div>
+        <div class="button-container">
+            <button id="compareBtn">开始对比</button>
+            <button id="clearBtn">清空数据</button>
+        </div>
+        <div class="result-container">
+            <div class="result-header">  <!-- 新增结果区标题容器 -->
+                <h2>未接龙人员</h2>
+                <button id="copyBtn">复制名单</button>
+            </div>
+            <div id="resultList"></div>
+        </div>
+    </div>
+    <div id="presetModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="modal-title">保存为预设名单</span>
+            <label for="presetNameInput" class="modal-label">请输入预设名单名称：</label>
+            <input type="text" id="presetNameInput" class="modal-input" maxlength="30" />
+            <div class="modal-tip">预设名单数据保存在本地，请勿清除浏览器缓存，否则名单会消失。</div>
+            <div class="modal-btn-group">
+                <button id="modalConfirmBtn">确定</button>
+                <button id="modalCancelBtn">取消</button>
+            </div>
+        </div>
+    </div>
+    <div id="msgModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <div class="modal-msg-text" id="msgModalText"></div>
+            <div class="modal-btn-group">
+                <button id="msgModalConfirmBtn">确定</button>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

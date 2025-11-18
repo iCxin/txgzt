@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>签到表生成器</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="form-section">
+            <div class="form-header">
+                <div class="form-header-left">
+                    <h2>签到表生成器</h2>
+                    <p class="form-desc">请填写以下信息生成签到表</p>
+                </div>
+                <div class="form-header-buttons"><a href="../../" class="back-home">返回主页</a><button type="button"
+                        class="help-btn" onclick="showTutorial()">使用教程</button><button type="button" class="help-btn"
+                        onclick="showAbout()">关于本站</button></div>
+            </div>
+            <div class="form-body">
+                <div class="input-group"><label for="title">签到表标题</label><input type="text" id="title" value="xx活动签到表">
+                </div>
+                <div class="input-group"><label>表格数据 <a
+                            href="https://c.cin.xin/files/%E5%AF%BC%E5%85%A5%E6%A8%A1%E6%9D%BF.xlsx">下载模板</a></label>
+                    <div class="file-upload"><input type="file" id="fileInput" accept=".xlsx, .xls, .csv"
+                            style="display: none;">
+                        <div id="fileName" class="file-name">请选择文件：要求为包含姓名、行政班级的表格</div>
+                        <div class="upload-buttons"><button type="button" id="selectFileBtn"
+                                class="upload-btn">选择文件</button><button type="button" id="importBtn" class="upload-btn"
+                                disabled>导入数据</button></div>
+                        <div id="dataStatus" class="data-status"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="preview-section">
+            <div class="preview-header">
+                <div class="preview-header-left">
+                    <h3>预览窗口</h3><span class="preview-tip">请点击打印查看最终效果，预览效果仅供参考</span>
+                </div>
+                <div class="preview-tools">
+                    <div class="zoom-controls"><button class="secondary-btn zoom-btn"
+                            onclick="changeZoom('out')">-</button><span class="zoom-level">100%</span><button
+                            class="secondary-btn zoom-btn" onclick="changeZoom('in')">+</button><button
+                            class="secondary-btn zoom-btn" onclick="resetZoom()">重置</button></div><button
+                        onclick="window.print()" class="print-btn" disabled>打印</button>
+                </div>
+            </div>
+            <div class="certificate-pages"></div>
+            <div class="pagination-controls">
+                <div class="page-info"> 第 <span id="currentPage">1</span> 页 / 共 <span id="totalPages">1</span> 页 </div>
+                <div class="rows-control"><label for="rowsPerPage">每页行数：</label>
+                    <div class="rows-input-group"><button class="rows-btn"
+                            onclick="adjustRows('decrease')">-</button><input type="number" id="rowsPerPage" value="27"
+                            min="1" max="100" onchange="updateRowsPerPage(this.value)"><button class="rows-btn"
+                            onclick="adjustRows('increase')">+</button></div>
+                </div>
+                <div class="page-buttons"><button id="prevPage" class="page-btn" disabled><span
+                            class="arrow prev">←</span> 上一页 </button><button id="nextPage" class="page-btn" disabled>
+                        下一页 <span class="arrow next">→</span></button></div>
+            </div>
+        </div>
+    </div>
+    <div class="mobile-warning" id="mobileWarning">
+        <div class="mobile-warning-content">
+            <div class="warning-icon">⚠️</div>
+            <h3>请使用电脑访问</h3>
+            <p>由于涉及到调用浏览器的打印功能，目前只支持在电脑端浏览器使用，推荐使用Chrome或者Edge</p>
+            <div class="browser-icons">
+                <div class="browser-icon"><span></span></div>
+                <div class="browser-icon"><span></span></div>
+            </div><button class="warning-btn" onclick="closeMobileWarning()">我知道了</button>
+        </div>
+    </div>
+    <div class="tutorial-modal" id="tutorialModal">
+        <div class="tutorial-content">
+            <div class="tutorial-header">
+                <h3>使用教程</h3><button class="close-tutorial" onclick="closeTutorial()">&times;</button>
+            </div>
+            <div class="tutorial-body">
+                <div class="tutorial-section">
+                    <h4>基本信息填写</h4>
+                    <ul>
+                        <li>签到表标题：输入签到表的标题，默认为"xx活动签到表"</li>
+                        <li>表格数据：导入Excel表格，必须包含姓名和行政班级两列</li>
+                    </ul>
+                </div>
+                <div class="tutorial-section">
+                    <h4>数据导入说明</h4>
+                    <ul>
+                        <li>支持的文件格式：Excel文件（.xlsx, .xls）或CSV文件</li>
+                        <li>表格必须包含以下列：姓名、行政班级</li>
+                        <li>导入后数据会自动按班级和姓名排序</li>
+                        <li>每页最多显示54名学生（双列布局，每列27人）</li>
+                    </ul>
+                </div>
+                <div class="tutorial-section">
+                    <h4>预览和导出</h4>
+                    <ul>
+                        <li>可以使用缩放控制（+/-）调整预览大小</li>
+                        <li>支持多页浏览，使用翻页按钮切换</li>
+                        <li>打印时会自动按A4纸张大小输出</li>
+                        <li>打印时会保持完整的表格样式和分页效果</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="tutorial-modal" id="aboutModal">
+        <div class="tutorial-content">
+            <div class="tutorial-header">
+                <h3>关于本站</h3><button class="close-tutorial" onclick="closeAbout()">&times;</button>
+            </div>
+            <div class="tutorial-body">
+                <div class="tutorial-section">
+                    <h4>开发者信息</h4>
+                    <p>开发单位：SCAU水利团委组织部</p>
+                    <p>开发者：cxin</p>
+                    <p>联系开发者：<a href="mailto:tojx@qq.com">tojx@qq.com</a></p>
+                    <p>开发者首页：<a href="http://www.cxin.net" target="_blank">www.cxin.net</a></p>
+                </div>
+                <div class="tutorial-section">
+                    <h4>使用反馈</h4>
+                    <p>请直接联系本人进行反馈，会尽力维护。</p>
+                </div>
+                <div class="tutorial-section">
+                    <h4>开源信息</h4>
+                    <p>开源地址：<a href="https://github.com/iCxin/Activities-Certificate" target="_blank">GitHub</a></p>
+                </div>
+                <div class="tutorial-section">
+                    <h4>特别鸣谢</h4>
+                    <p>特别感谢顶流AI代码编辑器Cursor提供的基础技术支持：<a href="https://www.cursor.com/cn" target="_blank">点击下载cursor</a>
+                    </p>
+                </div>
+                <div class="tutorial-section">
+                    <h4>更新日志</h4>
+                    <p>V1.0（2025-04-30）：完成基本功能，发布第一个版本。</p>
+                    <p>V1.1（2025-05-01）：增加每页行数调整功能。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="page-footer">
+        <div class="footer-content">
+            <div class="footer-links"><a href="https://beian.miit.gov.cn/" target="_blank">蜀ICP备2024051667号</a></div>
+            <div class="copyright">©️2020-2025 SCAU水利与土木工程学院团委组织部&CxinLiu. All Rights Reserved.</div>
+        </div>
+    </footer>
+    <script src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/xlsx/0.18.2/xlsx.full.min.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

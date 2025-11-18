@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>水利团学工具箱</title>
+    <link rel="stylesheet" href="main.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>水利团学工具箱</h1>
+            <p>便捷高效的团学工作助手</p>
+        </header>
+        <main id="toolsGrid" class="tools-grid"></main>
+        <footer class="footer">
+            <div class="footer-content">
+                <p><a href="https://beian.miit.gov.cn/" target="_blank">蜀ICP备2024051667号</a></p>
+                <p>©️2020-2025 SCAU水利与土木工程学院团委组织部&CxinLiu. All Rights Reserved.</p>
+            </div>
+        </footer>
+    </div>
+    <div id="devModal" class="dev-modal">
+        <div class="dev-modal-content">
+            <h3>功能开发中</h3>
+            <p>该功能正在开发中，敬请期待！</p><button class="dev-modal-btn" onclick="closeDevModal();">我知道了</button>
+        </div>
+    </div>
+    <script>
+        // 添加时间戳防止缓存
+        document.write('<script src="main.js?v=' + new Date().getTime() + '"><\/script>');
+    </script>
+</body>
+
+</html>

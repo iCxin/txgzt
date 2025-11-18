@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>团费数据整理工具</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/xlsx/0.18.2/xlsx.full.min.js"></script>
+    <script src="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="form-section">
+            <div class="form-header">
+                <div class="form-header-left">
+                    <h2>团费数据整理工具</h2>
+                    <p class="form-desc">自动整理团费数据</p>
+                </div>
+                <div class="form-header-buttons"><a href="../../" class="back-home">返回主页</a><button type="button"
+                        class="help-btn" onclick="showTutorial();">使用说明</button><button type="button" class="help-btn"
+                        onclick="showAbout();">关于本站</button></div>
+            </div>
+            <div class="form-body">
+                <div class="input-group"><label>选择Excel文件</label>
+                    <div class="file-upload">
+                        <p id="fileName" class="file-name">请选择文件：要求为包含团费数据的Excel表格</p>
+                        <div class="upload-buttons"><input type="file" id="fileInput" accept=".xls,.xlsx"
+                                style="display: none;"><button type="button" id="selectFileBtn"
+                                class="upload-btn">选择文件</button><button type="button" id="importBtn" class="upload-btn"
+                                disabled>导入数据</button></div>
+                        <p id="dataStatus" class="data-status"></p>
+                    </div>
+                </div>
+                <div class="input-group"><label>标题设置</label>
+                    <div class="title-input"><input type="text" id="titleInput" class="form-input" placeholder="请输入标题">
+                    </div>
+                </div>
+                <div class="input-group"><label>年级设置（最低保留年级）</label>
+                    <div class="grade-settings">
+                        <div class="grade-item"><label>建筑专业</label><input type="number" id="architectureGrade"
+                                placeholder="如：2020"></div>
+                        <div class="grade-item"><label>水利土木专业</label><input type="number" id="civilGrade"
+                                placeholder="如：2021"></div>
+                        <div class="grade-item"><label>研究生</label><input type="number" id="graduateGrade"
+                                placeholder="如：2022"></div>
+                    </div>
+                </div>
+                <div class="input-group"><label>显示设置</label>
+                    <div class="display-settings"><label class="switch-wrapper"><input type="checkbox"
+                                id="hideCompletedSwitch" checked><span class="switch-text">隐藏已全部缴纳团费的班级</span></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="preview-section">
+            <div class="preview-header">
+                <div class="preview-header-left">
+                    <h3>数据预览</h3>
+                    <p class="preview-tip">导入数据后可预览整理结果</p>
+                </div>
+                <div class="preview-tools"><button type="button" id="exportBtn" class="print-btn"
+                        disabled>导出Excel</button><button type="button" id="exportPdfBtn" class="print-btn"
+                        disabled>导出PDF</button></div>
+            </div>
+            <div id="previewTable" class="preview-table"></div>
+        </div>
+    </div>
+    <div id="tutorialModal" class="tutorial-modal">
+        <div class="tutorial-content">
+            <div class="tutorial-header">
+                <h3>使用说明</h3><button class="close-tutorial" onclick="closeTutorial();">×</button>
+            </div>
+            <div class="tutorial-body">
+                <div class="tutorial-section">
+                    <h4>使用步骤</h4>
+                    <ol>
+                        <li>点击"选择文件"按钮，选择需要整理的Excel表格</li>
+                        <li>设置标题中的年份和月份</li>
+                        <li>设置各专业最低保留年级</li>
+                        <li>点击"导入数据"按钮，系统将自动整理数据</li>
+                        <li>预览整理结果</li>
+                        <li>确认无误后，点击"导出Excel"按钮下载整理好的文件</li>
+                    </ol>
+                </div>
+                <div class="tutorial-section">
+                    <h4>数据处理说明</h4>
+                    <ul>
+                        <li>自动删除特殊团支部数据</li>
+                        <li>自动删除团委相关数据</li>
+                        <li>根据设置的年级自动过滤数据</li>
+                        <li>自动处理组织名称格式</li>
+                        <li>自动按年级和组织名称排序</li>
+                        <li>自动设置表格样式和字体</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="aboutModal" class="tutorial-modal">
+        <div class="tutorial-content">
+            <div class="tutorial-header">
+                <h3>关于本站</h3><button class="close-tutorial" onclick="closeAbout();">×</button>
+            </div>
+            <div class="tutorial-body">
+                <div class="tutorial-section">
+                    <h4>功能简介</h4>
+                    <p>本工具用于自动化处理团费数据，提供便捷的Excel数据整理服务。</p>
+                </div>
+                <div class="tutorial-section">
+                    <h4>特别鸣谢</h4>
+                    <p>感谢 Cursor AI 在开发过程中提供的支持。</p>
+                </div>
+                <div class="tutorial-section">
+                    <h4>更新日志</h4>
+                    <p>V1.0.0 (2024-03-21)</p>
+                    <ul>
+                        <li>首次发布</li>
+                        <li>支持基础的团费数据整理功能</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="mobileWarning" class="mobile-warning">
+        <div class="mobile-warning-content">
+            <div class="warning-icon">⚠️</div>
+            <h3>请使用电脑访问</h3>
+            <p>为了更好的使用体验，请使用电脑浏览器访问本网站。</p><button class="warning-btn" onclick="closeMobileWarning();">我知道了</button>
+        </div>
+    </div>
+    <div class="page-footer">
+        <div class="footer-content">
+            <div class="footer-links"><a href="https://beian.miit.gov.cn/" target="_blank">蜀ICP备2024051667号</a></div>
+            <div class="copyright">©️2020-2025 SCAU水利与土木工程学院团委组织部&CxinLiu. All Rights Reserved.</div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
