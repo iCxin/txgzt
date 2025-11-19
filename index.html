@@ -2,82 +2,53 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <meta name="theme-color" content="#3498db">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="description" content="水利团学工作台 - 团学工作便捷导航与工具箱">
-    <title>水利团学工作台</title>
+    <meta name="description" content="学生便捷工作站 - 学生工作便捷工具集合">
+    <title>学生便捷工作站</title>
     <link rel="stylesheet" href="dashboard.css">
     <link rel="stylesheet" href="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/font-awesome/6.0.0/css/all.min.css">
-    <!-- 预加载图标字体 -->
-    <link rel="preload" href="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/font-awesome/6.0.0/webfonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
 </head>
 <body>
     <div class="container">
-        <header class="header">
-            <div class="header-container">
-                <div class="header-left">
-                    <div class="logo-wrapper">
-                        <div class="logo-circle">
-                            <i class="fa-solid fa-water"></i>
-                        </div>
-                    </div>
-                    <div class="header-titles">
-                        <h1 id="site-title">水利团学工作台</h1>
-                        <p id="site-subtitle">团学工作便捷导航与工具箱</p>
+        <div class="header-content-wrapper">
+            <header class="header">
+                <div class="header-content">
+                    <div class="site-info">
+                        <h1 id="site-title">学生便捷工作站</h1>
                     </div>
                 </div>
-                <div class="header-right">
-                    <div class="search-box">
-                        <input type="text" id="search-input" placeholder="搜索工具和链接..." aria-label="搜索工具和链接">
-                        <button id="search-btn" aria-label="搜索"><i class="fa-solid fa-search"></i></button>
-                    </div>
+                <div id="quick-access" class="quick-access"></div>
+            </header>
+
+            <div class="knowledge-banner">
+                <div class="knowledge-content">
+                    <a href="https://ima.cxin.net" target="_blank">
+                        <img src="image.jpeg" alt="知识库" class="knowledge-image">
+                    </a>
                 </div>
             </div>
-            <div id="quick-access" class="quick-access"></div>
-        </header>
-
+        </div>
+        
         <main id="main-content">
-            <!-- 分类导航区域将由JS填充 -->
             <div class="loading-indicator">
-                <div class="skeleton-loader">
-                    <div class="skeleton" style="height: 40px; margin-bottom: 15px;"></div>
-                    <div class="skeleton" style="height: 120px; margin-bottom: 20px;"></div>
-                    <div class="skeleton" style="height: 120px;"></div>
-                </div>
+                <div class="loading-text">加载中...</div>
             </div>
         </main>
 
-        <div id="dev-modal" class="dev-modal">
-            <div class="dev-modal-content">
-                <div class="modal-icon">
-                    <i class="fa-solid fa-code"></i>
-                </div>
-                <h3>功能开发中</h3>
-                <p>该功能正在开发中，敬请期待！</p>
-                <button class="dev-modal-btn" onclick="closeDevModal();">我知道了</button>
-            </div>
-        </div>
-
-        <footer class="footer">
-            <div class="footer-content">
-                <div class="footer-links">
-                    <a id="beian-link" href="https://beian.miit.gov.cn/" target="_blank" title="备案信息">蜀ICP备2024051667号</a>
-                </div>
-                <p id="copyright">©️2024-2025 SCAU水利与土木工程学院团委学生会. All Rights Reserved.</p>
-            </div>
-        </footer>
     </div>
 
-    <div class="floating-btn back-to-top" id="backToTop" aria-label="回到顶部">
-        <i class="fa-solid fa-arrow-up"></i>
+    <div id="dev-modal" class="modal">
+        <div class="modal-content">
+            <h3>功能开发中</h3>
+            <p>该功能正在开发中，敬请期待！</p>
+            <button onclick="closeDevModal()">我知道了</button>
+        </div>
     </div>
 
     <script src="config.js"></script>
     <script src="dashboard.js"></script>
 </body>
-</html> 
+</html>
