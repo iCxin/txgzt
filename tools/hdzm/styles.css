@@ -1465,9 +1465,6 @@ button {
     color: #1890ff;
 }
 
-.copyright {
-    color: #999;
-}
 
 /* 响应式调整 */
 @media screen and (max-width: 768px) {

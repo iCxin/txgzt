@@ -560,10 +560,6 @@ body {
     color: #1890ff;
 }
 
-.copyright {
-    color: #999;
-}
-
 /* 增强响应式布局 */
 @media screen and (max-width: 1600px) {
     :root {
