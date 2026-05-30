@@ -18,7 +18,7 @@ const dashboardConfig = {
     tools: [
         {
             name: "组织部工具箱Pro",
-            description: "组织部全能工具箱。",
+            description: "组织部全能工具箱。by 淳哥。",
             url: "tools/zzbpro",
             status: 1
         },
