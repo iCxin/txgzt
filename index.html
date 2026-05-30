@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="description" content="学生便捷工作站 - 学生工作便捷工具集合">
+    <title>学生便捷工作站</title>
+    <link rel="stylesheet" href="/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header-content-wrapper">
+            <header class="header">
+                <div class="header-content">
+                    <div class="site-info">
+                        <h1 id="site-title">学生便捷工作站</h1>
+                        <p id="site-description">为了更轻松地当牛马.......</p>
+                    </div>
+                </div>
+                <div id="quick-access" class="quick-access"></div>
+            </header>
+
+            <div class="knowledge-banner">
+                <div class="knowledge-content">
+                    <a href="https://ima.cxin.net" target="_blank">
+                        <img src="image.jpeg" alt="知识库" class="knowledge-image">
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <main id="main-content">
+            <div class="loading-indicator">
+                <div class="loading-text">加载中...</div>
+            </div>
+        </main>
+
+    </div>
+
+    <div id="dev-modal" class="modal">
+        <div class="modal-content">
+            <h3>功能开发中</h3>
+            <p>该功能正在开发中，敬请期待！</p>
+            <button onclick="closeDevModal()">我知道了</button>
+        </div>
+    </div>
+
+    <script src="/config.js"></script>
+    <script src="/dashboard.js"></script>
+</body>
+</html>

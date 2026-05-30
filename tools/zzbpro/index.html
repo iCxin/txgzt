@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>团委组织部 · 数据整理</title>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
+<style>
+/* ============================================================
+   Design Tokens — "Modern Institutional"
+   ============================================================ */
+:root {
+  --red-900: #7F1D1D;
+  --red-700: #B71C2C;
+  --red-500: #D9364A;
+  --red-300: #F2A0A9;
+  --red-100: #FDE8EB;
+  --gold-600: #C8963E;
+  --gold-200: #F5E6CC;
+  --paper:    #F9F6F2;
+  --ink-900:  #1A1A1A;
+  --ink-700:  #4A4A4A;
+  --ink-500:  #7A7A7A;
+  --ink-300:  #D4D0CB;
+  --ink-150:  #EBE7E2;
+  --ink-100:  #F2EFEB;
+  --white:    #FFFFFF;
+  --green-600:#3D7A3D;
+  --green-100:#E8F2E8;
+  --amber-600:#B07D20;
+  --amber-100:#FCF3E2;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,.06);
+  --shadow-md: 0 4px 16px rgba(0,0,0,.07), 0 1px 4px rgba(0,0,0,.04);
+  --transition: 180ms cubic-bezier(.4,0,.2,1);
+}
+
+* { box-sizing:border-box; margin:0; padding:0 }
+
+body {
+  font-family: "PingFang SC","Microsoft YaHei","Hiragino Sans GB",system-ui,"Segoe UI",sans-serif;
+  background: var(--paper);
+  color: var(--ink-900);
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  padding: 24px 16px 48px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---- App Shell ---- */
+.app {
+  width: 860px;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* ---- Header ---- */
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 0 20px 4px;
+}
+.app-header .brand-mark {
+  width: 36px; height: 36px;
+  background: var(--red-700);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+  font-weight: 700;
+  font-size: 18px;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(183,28,44,.25);
+}
+.app-header h1 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink-900);
+  letter-spacing: .02em;
+}
+.app-header .subtitle {
+  font-size: 12px;
+  color: var(--ink-500);
+  margin-left: auto;
+}
+.app-header .credit {
+  font-size: 12px;
+  color: var(--ink-300);
+  margin-left: 6px;
+}
+
+/* ---- Tabs ---- */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--ink-150);
+  margin-bottom: 20px;
+}
+.tab-btn {
+  position: relative;
+  padding: 10px 28px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-500);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color var(--transition);
+  font-family: inherit;
+  letter-spacing: .03em;
+}
+.tab-btn:hover { color: var(--ink-700); }
+.tab-btn.active { color: var(--red-700); }
+.tab-btn.active::after {
+  content: "";
+  position: absolute;
+  bottom: -1px; left: 12px; right: 12px;
+  height: 2px;
+  background: var(--red-700);
+  border-radius: 2px 2px 0 0;
+}
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ---- Section Card ---- */
+.section {
+  background: var(--white);
+  border: 1px solid var(--ink-150);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow-sm);
+}
+.section-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--ink-500);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-label::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--ink-150);
+}
+
+/* ---- Year Row ---- */
+.year-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.year-row .yr-label { font-size: 13px; font-weight: 600; color: var(--ink-700); }
+.year-row input[type=number] {
+  width: 76px;
+  padding: 5px 10px;
+  border: 1px solid var(--ink-300);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-family: inherit;
+  text-align: center;
+  background: var(--ink-100);
+  transition: border var(--transition), box-shadow var(--transition);
+}
+.year-row input[type=number]:focus {
+  outline: none;
+  border-color: var(--red-500);
+  box-shadow: 0 0 0 3px var(--red-100);
+}
+.year-hint { font-size: 12px; color: var(--ink-500); }
+
+/* ---- Grade Panel ---- */
+.grade-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 196px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+.grade-panel::-webkit-scrollbar { width: 5px; }
+.grade-panel::-webkit-scrollbar-thumb { background: var(--ink-300); border-radius: 10px; }
+
+.grade-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  transition: background var(--transition);
+}
+.grade-item:hover { background: var(--ink-100); }
+.grade-item input[type=checkbox] {
+  accent-color: var(--red-700);
+  width: 15px; height: 15px;
+  flex-shrink: 0;
+}
+.grade-num {
+  font-weight: 700;
+  color: var(--ink-700);
+  min-width: 46px;
+  font-variant-numeric: tabular-nums;
+}
+.grade-majors {
+  color: var(--ink-700);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px 6px;
+}
+.grade-majors .tag {
+  font-size: 11px;
+  padding: 1px 7px;
+  border-radius: 10px;
+  background: var(--ink-100);
+  color: var(--ink-700);
+}
+.grade-majors .tag.graduated {
+  background: none;
+  color: var(--ink-500);
+  text-decoration: line-through;
+  text-decoration-color: var(--ink-300);
+}
+
+/* ---- File Zone ---- */
+.file-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.file-row:last-child { margin-bottom: 0; }
+.file-row .fl-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-700);
+  min-width: 52px;
+}
+.drop-zone {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  padding: 8px 14px;
+  border: 1.5px dashed var(--ink-300);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  color: var(--ink-500);
+  cursor: pointer;
+  transition: all var(--transition);
+  background: var(--ink-100);
+  min-height: 38px;
+}
+.drop-zone:hover { border-color: var(--ink-500); color: var(--ink-700); }
+.drop-zone.drag-over {
+  border-color: var(--red-500);
+  background: var(--red-100);
+  color: var(--red-700);
+}
+.drop-zone.has-file {
+  border-style: solid;
+  border-color: var(--green-600);
+  background: var(--green-100);
+  color: var(--ink-900);
+}
+.btn-browse {
+  padding: 7px 16px;
+  border: 1px solid var(--ink-300);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  color: var(--ink-700);
+  font-size: 13px;
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+  transition: all var(--transition);
+}
+.btn-browse:hover { background: var(--ink-100); border-color: var(--ink-500); }
+
+/* ---- Output hint ---- */
+.out-hint {
+  font-size: 12px;
+  color: var(--ink-500);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 2px;
+  padding-left: 62px;
+}
+
+/* ---- Actions ---- */
+.action-bar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 28px;
+  background: var(--red-700);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all var(--transition);
+  letter-spacing: .02em;
+  box-shadow: 0 2px 6px rgba(183,28,44,.3);
+}
+.btn-primary:hover {
+  background: var(--red-900);
+  box-shadow: 0 3px 12px rgba(183,28,44,.35);
+  transform: translateY(-1px);
+}
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 3px rgba(183,28,44,.2);
+}
+.btn-primary:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.check-label {
+  font-size: 13px;
+  color: var(--ink-700);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  user-select: none;
+}
+.check-label input[type=checkbox] { accent-color: var(--red-700); width: 15px; height: 15px; }
+
+/* ---- Log ---- */
+.log-shell {
+  background: #1C1C1E;
+  border-radius: var(--radius-md);
+  padding: 14px 18px;
+  height: 280px;
+  overflow-y: auto;
+  font-family: "JetBrains Mono","SF Mono","Cascadia Code","Fira Code",Consolas,monospace;
+  font-size: 12px;
+  line-height: 1.7;
+  color: #C8C8C8;
+  box-shadow: inset 0 2px 8px rgba(0,0,0,.3);
+}
+.log-shell::-webkit-scrollbar { width: 5px; }
+.log-shell::-webkit-scrollbar-thumb { background: #444; border-radius: 10px; }
+
+.log-line { white-space: pre-wrap; }
+.log-line.dim    { color: #6A6A6A; }
+.log-line.header { color: #E8C97A; font-weight: 600; }
+.log-line.err    { color: #F05A5A; }
+.log-line.warn   { color: #E8A840; }
+.log-line.ok     { color: #6FB86F; }
+
+/* ---- Hidden ---- */
+.hidden { display: none !important; }
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- Header -->
+  <header class="app-header">
+    <div class="brand-mark">团</div>
+    <h1>团委组织部 · 数据整理</h1>
+    <span class="subtitle">团费收缴 & 毕业生转接</span>
+    <span class="credit">凌晨散云时</span>
+  </header>
+
+  <!-- Tabs -->
+  <nav class="tab-bar">
+    <button class="tab-btn active" data-tab="fee">团费收缴</button>
+    <button class="tab-btn" data-tab="transfer">毕业生转接</button>
+  </nav>
+
+  <!-- ==================== 团费 ==================== -->
+  <div class="tab-panel active" id="tab-fee">
+    <div class="section">
+      <div class="section-label">年份设置</div>
+      <div class="year-row">
+        <span class="yr-label">处理年份</span>
+        <input type="number" id="fee-year" min="2015" max="2099">
+        <span class="year-hint">7 月毕业规则 · 入学年 + 学制 &lt; 此年即毕业</span>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">允许导出的年级与专业</div>
+      <div class="grade-panel" id="fee-grade-panel"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">数据文件</div>
+      <div class="file-row">
+        <span class="fl-label">源数据</span>
+        <div class="drop-zone" id="fee-src-zone">拖入智慧团建导出的 .xls 文件，或点击右侧浏览</div>
+        <input type="file" id="fee-src-file" accept=".xls,.xlsx" class="hidden">
+        <button class="btn-browse" id="fee-src-browse">浏览</button>
+      </div>
+      <div class="out-hint">→ 输出文件名自动从源数据日期提取：团费通报【M.D】.xlsx</div>
+    </div>
+
+    <div class="action-bar">
+      <button class="btn-primary" id="fee-run">开始处理</button>
+      <label class="check-label">
+        <input type="checkbox" id="fee-include-all"> 导出全部数据（含已毕业班级）
+      </label>
+    </div>
+
+    <div class="section">
+      <div class="section-label">处理日志</div>
+      <div class="log-shell" id="fee-log"><span class="log-line dim">就绪，等待操作…</span></div>
+    </div>
+  </div>
+
+  <!-- ==================== 转接 ==================== -->
+  <div class="tab-panel" id="tab-transfer">
+    <div class="section">
+      <div class="section-label">年份设置</div>
+      <div class="year-row">
+        <span class="yr-label">处理年份</span>
+        <input type="number" id="tr-year" min="2015" max="2099">
+        <span class="year-hint">5 月毕业规则 · 入学年 + 学制 ≤ 此年即毕业</span>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">已毕业的年级与专业</div>
+      <div class="grade-panel" id="tr-grade-panel"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">数据文件</div>
+      <div class="file-row">
+        <span class="fl-label">源数据</span>
+        <div class="drop-zone" id="tr-src-zone">拖入团员名单 .xls 文件，或点击右侧浏览</div>
+        <input type="file" id="tr-src-file" accept=".xls,.xlsx" class="hidden">
+        <button class="btn-browse" id="tr-src-browse">浏览</button>
+      </div>
+      <div class="file-row">
+        <span class="fl-label">备注</span>
+        <div class="drop-zone" id="tr-bz-zone">拖入备注 .xlsx 文件，或点击右侧浏览（可选）</div>
+        <input type="file" id="tr-bz-file" accept=".xlsx" class="hidden">
+        <button class="btn-browse" id="tr-bz-browse">浏览</button>
+      </div>
+      <div class="out-hint">→ 输出分"已备注""未备注"两个 Sheet，文件名自动提取日期</div>
+    </div>
+
+    <div class="action-bar">
+      <button class="btn-primary" id="tr-run">开始处理</button>
+      <label class="check-label">
+        <input type="checkbox" id="tr-include-all"> 导出全部数据（含非毕业年级）
+      </label>
+    </div>
+
+    <div class="section">
+      <div class="section-label">处理日志</div>
+      <div class="log-shell" id="tr-log"><span class="log-line dim">就绪，等待操作…</span></div>
+    </div>
+  </div>
+</div>
+<script>
+// ============================================================
+// 配置常量
+// ============================================================
+const MAJOR_ABBR = { "水利水电工程":"水利", "土木工程":"土木", "建筑学":"建筑", "智能建造":"智建" };
+const PROGRAM_YEARS = { "土木工程":4, "水利水电工程":4, "建筑学":5, "智能建造":4, "研究生":3 };
+const GRADE_COLORS = ["DCE6F1","E2EFDA","FFF2CC","E4DFEC","F2DCDB","D9E5D6"];
+
+// ============================================================
+// 工具
+// ============================================================
+function $(id) { return document.getElementById(id); }
+
+function generateOutputName(srcPath, prefix) {
+  const base = srcPath.replace(/^.*[\\/]/, "").replace(/\.[^.]+$/, "");
+  const m = base.match(/(\d{4})(\d{2})(\d{2})/);
+  if (m) {
+    const month = parseInt(m[2], 10), day = parseInt(m[3], 10);
+    return `${prefix}【${month}.${day}】.xlsx`;
+  }
+  return `${base}-1.xlsx`;
+}
+
+function log(msg, widget, cls) {
+  const div = document.createElement("div");
+  div.className = "log-line" + (cls ? " " + cls : "");
+  div.textContent = msg;
+  widget.appendChild(div);
+  widget.scrollTop = widget.scrollHeight;
+}
+
+// ============================================================
+// 业务逻辑 — 通用
+// ============================================================
+function extractClassInfo(orgName) {
+  let m = orgName.match(/(\d{4})级(.+?)专业(\d+)班团支部$/);
+  if (m) return { year:parseInt(m[1]), major:m[2], classNum:parseInt(m[3]), isGraduate:false };
+  m = orgName.match(/(\d{4})级研究生团支部$/);
+  if (m) return { year:parseInt(m[1]), major:"研究生", classNum:0, isGraduate:true };
+  return null;
+}
+
+function toShortName(info) {
+  const ys = String(info.year).slice(-2);
+  if (info.isGraduate) return ys + info.major;
+  const abbr = MAJOR_ABBR[info.major] || info.major;
+  return ys + abbr + info.classNum + "班";
+}
+
+function isGraduating(enrollYear, major, currentYear) {
+  const len = PROGRAM_YEARS[major] || 4;
+  return enrollYear + len < currentYear;
+}
+
+function isGraduatingMay(enrollYear, major, currentYear) {
+  const len = PROGRAM_YEARS[major] || 4;
+  return enrollYear + len <= currentYear;
+}
+
+function getAllowedCombinations(currentYear) {
+  const allowed = {};
+  const maxProg = Math.max(...Object.values(PROGRAM_YEARS));
+  for (let g = currentYear; g >= currentYear - maxProg - 1; g--) {
+    const majors = [];
+    for (const [major, years] of Object.entries(PROGRAM_YEARS)) {
+      if (g + years >= currentYear) majors.push(major);
+    }
+    if (majors.length > 0) allowed[g] = majors;
+  }
+  return allowed;
+}
+
+function getGraduatingCombinations(currentYear) {
+  const graduating = {};
+  const maxProg = Math.max(...Object.values(PROGRAM_YEARS));
+  for (let g = currentYear; g >= currentYear - maxProg - 1; g--) {
+    const majors = [];
+    for (const [major, years] of Object.entries(PROGRAM_YEARS)) {
+      if (g + years <= currentYear) majors.push(major);
+    }
+    if (majors.length > 0) graduating[g] = majors;
+  }
+  return graduating;
+}
+
+function orgNameToShort(orgName) {
+  const prefixes = [
+    "共青团华南农业大学水利与土木工程学院",
+    "华南农业大学水利与土木工程学院",
+    "共青团",
+  ];
+  for (const p of prefixes) {
+    if (orgName.startsWith(p)) { const s = orgName.slice(p.length); return s || orgName; }
+  }
+  const idx = orgName.lastIndexOf("学院");
+  if (idx !== -1) return orgName.slice(idx + 2);
+  return orgName;
+}
+
+// ============================================================
+// 列检测（转接）
+// ============================================================
+function detectColumns(rows) {
+  const ncols = rows[0] ? rows[0].length : 0;
+  let dataStart = 0;
+  for (let ri = 0; ri < Math.min(5, rows.length); ri++) {
+    const vals = rows[ri].map(v => String(v || ""));
+    const hasTuan = vals.some(v => v.includes("团支部"));
+    const hasPhone = vals.some(v => /^1\d{10}$/.test(v));
+    const hasGender = vals.some(v => v === "男" || v === "女");
+    if (hasTuan && hasPhone && hasGender) { dataStart = ri; break; }
+  }
+
+  const sample = rows.slice(dataStart, dataStart + Math.min(100, rows.length - dataStart));
+  const scores = {};
+  for (let c = 0; c < ncols; c++) scores[c] = { name:0, gender:0, phone:0, org:0 };
+
+  for (let c = 0; c < ncols; c++) {
+    const vals = sample.map(r => String(r[c] || "").trim()).filter(v => v);
+    if (vals.length < 3) continue;
+    const total = vals.length;
+    const uniqueSet = new Set(vals);
+
+    if (uniqueSet.size <= 2 && [...uniqueSet].every(v => v === "男" || v === "女")) {
+      scores[c].gender = 100;
+    }
+    const phoneCount = vals.filter(v => /^1[3-9]\d{9}$/.test(v)).length;
+    if (phoneCount / total > 0.9) scores[c].phone = 100;
+    const tuanCount = vals.filter(v => v.includes("团支部")).length;
+    if (tuanCount / total > 0.5) scores[c].org = 100;
+    const cnCount = vals.filter(v => /^[一-鿿]{2,4}$/.test(v)).length;
+    if (cnCount / total > 0.8 && uniqueSet.size / total > 0.8) scores[c].name = 100;
+  }
+
+  const priority = ["name","phone","org","gender"];
+  const colMap = {};
+  const used = new Set();
+  for (const role of priority) {
+    for (let c = 0; c < ncols; c++) {
+      if (used.has(c)) continue;
+      if (scores[c][role] >= 100) { colMap[role] = c; used.add(c); break; }
+    }
+  }
+  if (Object.keys(colMap).length < 4) {
+    throw new Error("无法识别列角色，请检查源数据格式。已识别: " + JSON.stringify(colMap));
+  }
+  return { colMap, dataStart };
+}
+
+// ============================================================
+// 备注解析
+// ============================================================
+function parseBeizhu(rows) {
+  if (rows.length === 0) return { map:{}, anomalies:[] };
+  const headers = rows[0].map(h => String(h || "").trim());
+  let ciName = -1, ciReason = -1, ciSupp = -1, ciCount = -1;
+  for (let i = 0; i < headers.length; i++) {
+    const h = headers[i];
+    if (h === "姓名") ciName = i;
+    else if (h.includes("原因") && !h.includes("补充")) ciReason = i;
+    else if (h.includes("补充")) ciSupp = i;
+    else if (h.includes("第几") || h.includes("次数") || h.includes("填写")) ciCount = i;
+  }
+  if (ciName === -1 || ciReason === -1) {
+    throw new Error("备注文件列检测失败，请确认包含「姓名」和「未及时转出原因」列");
+  }
+
+  const nameGroups = {};
+  for (let i = 1; i < rows.length; i++) {
+    const name = String(rows[i][ciName] || "").trim();
+    if (!name || name === "nan") continue;
+    const reason = String(rows[i][ciReason] || "").trim();
+    let supplement = "";
+    if (ciSupp >= 0 && rows[i][ciSupp] != null) supplement = String(rows[i][ciSupp]).trim();
+    let countVal = 0, countRaw = "";
+    if (ciCount >= 0 && rows[i][ciCount] != null) {
+      countRaw = String(rows[i][ciCount]).trim();
+      const n = parseInt(countRaw, 10);
+      countVal = isNaN(n) ? -1 : n;
+    }
+    if (!nameGroups[name]) nameGroups[name] = [];
+    nameGroups[name].push({ reason, supplement, count:countVal, countRaw });
+  }
+
+  const map = {};
+  const anomalies = [];
+  for (const [name, entries] of Object.entries(nameGroups)) {
+    for (const e of entries) {
+      if (e.count === -1) anomalies.push(`备注异常值: ${name} 的「第几次填写」为非数字 '${e.countRaw}'，已忽略`);
+    }
+    entries.sort((a, b) => b.count - a.count);
+    const best = entries[0];
+    if (best.reason === "其他") {
+      map[name] = best.supplement || "其他";
+      if (!best.supplement) anomalies.push(`备注警告: ${name} 原因为'其他'但无补充填空`);
+    } else {
+      map[name] = best.reason;
+    }
+  }
+  return { map, anomalies };
+}
+
+// ============================================================
+// 主处理 — 团费
+// ============================================================
+function processFee(rows, currentYear, includeAll, selectedGrades) {
+  const totalRows = rows.length;
+  let classRows = 0;
+  const results = [];
+  const graduatingList = [];
+  const zeroUnpaidList = [];
+  const skippedGradeList = [];
+  const otherList = [];
+
+  for (const row of rows) {
+    const orgName = String(row[0] || "");
+    const info = extractClassInfo(orgName);
+    const shouldPay = parseInt(row[2]) || 0;
+    const unpaid = parseInt(row[4]) || 0;
+
+    if (!info) {
+      if (includeAll && unpaid > 0) {
+        const short = orgNameToShort(orgName);
+        otherList.push(short);
+        results.push({ className:short, year:9999, major:"其他", classNum:0, shouldPay, unpaid });
+      }
+      continue;
+    }
+    classRows++;
+
+    if (selectedGrades) {
+      const allowedMajors = selectedGrades[info.year];
+      if (!allowedMajors) { skippedGradeList.push(toShortName(info)); continue; }
+      if (!allowedMajors.includes(info.major)) {
+        graduatingList.push(`${info.year}级${info.major}${info.isGraduate?"":info.classNum+"班"}`);
+        continue;
+      }
+    } else if (!includeAll && isGraduating(info.year, info.major, currentYear)) {
+      graduatingList.push(`${info.year}级${info.major}${info.isGraduate?"":info.classNum+"班"}`);
+      continue;
+    }
+
+    const short = toShortName(info);
+    if (unpaid === 0) { zeroUnpaidList.push(short); continue; }
+
+    results.push({ className:short, year:info.year, major:info.major, classNum:info.classNum, shouldPay, unpaid });
+  }
+
+  const majorOrder = { ...MAJOR_ABBR };
+  majorOrder["研究生"] = Object.keys(MAJOR_ABBR).length;
+  majorOrder["其他"] = Object.keys(MAJOR_ABBR).length + 99;
+  results.sort((a, b) => {
+    if (a.year !== b.year) return b.year - a.year;
+    const oa = majorOrder[a.major] ?? 99, ob = majorOrder[b.major] ?? 99;
+    if (oa !== ob) return oa - ob;
+    if (a.classNum !== b.classNum) return a.classNum - b.classNum;
+    return 0;
+  });
+
+  return { results, graduatingList, zeroUnpaidList, skippedGradeList, otherList, totalRows, classRows };
+}
+
+// ============================================================
+// 主处理 — 转接
+// ============================================================
+function processTransfer(rows, beizhuMap, currentYear, includeAll, selectedGrades) {
+  const results = [];
+  const skippedGradeList = [];
+  const otherList = [];
+  let matchedCount = 0;
+
+  const { colMap, dataStart } = detectColumns(rows);
+  const data = rows.slice(dataStart);
+  const totalRows = data.length;
+  const ciName = colMap.name, ciGender = colMap.gender, ciPhone = colMap.phone, ciOrg = colMap.org;
+
+  for (const row of data) {
+    const name = String(row[ciName] || "").trim();
+    if (!name) continue;
+    const gender = String(row[ciGender] || "").trim();
+    const phone = String(row[ciPhone] || "").trim();
+    const orgName = String(row[ciOrg] || "").trim();
+    const beizhu = beizhuMap[name] || "";
+    if (beizhu) matchedCount++;
+
+    const info = extractClassInfo(orgName);
+    if (!info) {
+      if (includeAll) {
+        const short = orgNameToShort(orgName);
+        otherList.push(`${name} (${short})`);
+        results.push({ name, gender, phone, className:short, beizhu, year:9999, major:"其他", classNum:0 });
+      }
+      continue;
+    }
+
+    if (selectedGrades) {
+      const graduatingMajors = selectedGrades[info.year];
+      if (!graduatingMajors) { skippedGradeList.push(`${name} (${toShortName(info)})`); continue; }
+      if (!graduatingMajors.includes(info.major)) continue;
+    } else if (!includeAll && !isGraduatingMay(info.year, info.major, currentYear)) {
+      continue;
+    }
+
+    const short = toShortName(info);
+    results.push({ name, gender, phone, className:short, beizhu, year:info.year, major:info.major, classNum:info.classNum });
+  }
+
+  const majorOrder = { ...MAJOR_ABBR };
+  majorOrder["研究生"] = Object.keys(MAJOR_ABBR).length;
+  majorOrder["其他"] = Object.keys(MAJOR_ABBR).length + 99;
+  results.sort((a, b) => {
+    if (a.year !== b.year) return b.year - a.year;
+    const oa = majorOrder[a.major] ?? 99, ob = majorOrder[b.major] ?? 99;
+    if (oa !== ob) return oa - ob;
+    if (a.classNum !== b.classNum) return a.classNum - b.classNum;
+    return a.name.localeCompare(b.name, "zh");
+  });
+
+  return { results, totalRows, matchedCount, skippedGradeList, otherList };
+}
+
+// ============================================================
+// Excel 输出
+// ============================================================
+async function writeFeeExcel(results, outputName) {
+  const wb = new ExcelJS.Workbook();
+  const ws = wb.addWorksheet("团费未交统计");
+  const headers = ["班级","应交团员人数","未交团员人数"];
+  const hRow = ws.addRow(headers);
+  hRow.eachCell(c => {
+    c.font = { bold:true, size:11 };
+    c.fill = { type:"pattern", pattern:"solid", fgColor:{ argb:"FFB8B8B8" } };
+    c.alignment = { horizontal:"center", vertical:"middle" };
+    c.border = { top:{style:"thin"},bottom:{style:"thin"},left:{style:"thin"},right:{style:"thin"} };
+  });
+
+  if (results.length > 0) {
+    const uniqueYears = [...new Set(results.map(r => r.year))];
+    const yearColors = {};
+    uniqueYears.forEach((y, i) => yearColors[y] = GRADE_COLORS[i % GRADE_COLORS.length]);
+
+    for (const r of results) {
+      const row = ws.addRow([r.className, r.shouldPay, r.unpaid]);
+      row.eachCell(c => {
+        c.fill = { type:"pattern", pattern:"solid", fgColor:{ argb:"FF" + yearColors[r.year] } };
+        c.alignment = { horizontal:"center", vertical:"middle" };
+        c.border = { top:{style:"thin"},bottom:{style:"thin"},left:{style:"thin"},right:{style:"thin"} };
+      });
+    }
+
+    const gradeCol = headers.length + 1;
+    ws.getCell(1, gradeCol).value = "年级";
+    ws.getCell(1, gradeCol).font = { bold:true, size:11 };
+    ws.getCell(1, gradeCol).fill = { type:"pattern", pattern:"solid", fgColor:{ argb:"FFB8B8B8" } };
+    ws.getCell(1, gradeCol).alignment = { horizontal:"center", vertical:"middle" };
+    ws.getCell(1, gradeCol).border = { top:{style:"thin"},bottom:{style:"thin"},left:{style:"thin"},right:{style:"thin"} };
+    results.forEach((r, i) => {
+      const cell = ws.getCell(i + 2, gradeCol);
+      cell.value = `${r.year}级`;
+      cell.fill = { type:"pattern", pattern:"solid", fgColor:{ argb:"FF" + yearColors[r.year] } };
+      cell.alignment = { horizontal:"center", vertical:"middle" };
+      cell.border = { top:{style:"thin"},bottom:{style:"thin"},left:{style:"thin"},right:{style:"thin"} };
+    });
+  }
+
+  ws.columns = [{ width:18 }, { width:16 }, { width:16 }, { width:10 }];
+  const buf = await wb.xlsx.writeBuffer();
+  downloadBlob(buf, outputName);
+}
+
+async function writeTransferExcel(results, outputName) {
+  const wb = new ExcelJS.Workbook();
+  const headers = ["姓名","性别","手机号码","班级","备注"];
+  const colWidths = [12, 8, 16, 16, 30];
+
+  const noted = results.filter(r => r.beizhu && r.beizhu.trim());
+  const unnoted = results.filter(r => !r.beizhu || !r.beizhu.trim());
+  const sheets = [{ name:"已备注", data:noted }, { name:"未备注", data:unnoted }];
+
+  for (const sh of sheets) {
+    const ws = wb.addWorksheet(sh.name);
+    const hRow = ws.addRow(headers);
+    hRow.eachCell(c => {
+      c.font = { bold:true, size:11 };
+      c.fill = { type:"pattern", pattern:"solid", fgColor:{ argb:"FFB8B8B8" } };
+      c.alignment = { horizontal:"center", vertical:"middle" };
+      c.border = { top:{style:"thin"},bottom:{style:"thin"},left:{style:"thin"},right:{style:"thin"} };
+    });
+
+    if (sh.data.length > 0) {
+      const uniqueYears = [...new Set(sh.data.map(r => r.year))];
+      const yearColors = {};
+      uniqueYears.forEach((y, i) => yearColors[y] = GRADE_COLORS[i % GRADE_COLORS.length]);
+
+      for (const r of sh.data) {
+        const row = ws.addRow([r.name, r.gender, r.phone, r.className, r.beizhu]);
+        row.eachCell(c => {
+          c.fill = { type:"pattern", pattern:"solid", fgColor:{ argb:"FF" + yearColors[r.year] } };
+          c.alignment = { horizontal:"center", vertical:"middle" };
+          c.border = { top:{style:"thin"},bottom:{style:"thin"},left:{style:"thin"},right:{style:"thin"} };
+        });
+      }
+    }
+    ws.columns = colWidths.map(w => ({ width:w }));
+  }
+
+  const buf = await wb.xlsx.writeBuffer();
+  downloadBlob(buf, outputName);
+}
+
+function downloadBlob(buf, filename) {
+  const blob = new Blob([buf], { type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+// ============================================================
+// 文件读取
+// ============================================================
+function readFileAsText(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsText(file);
+  });
+}
+
+function readFileAsArrayBuffer(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsArrayBuffer(file);
+  });
+}
+
+function parseHtmlTable(html) {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, "text/html");
+  const table = doc.querySelector("table");
+  if (!table) throw new Error("未找到 HTML 表格，请确认源文件为智慧团建导出的 .xls 文件");
+  const rows = [];
+  table.querySelectorAll("tr").forEach(tr => {
+    const row = [];
+    tr.querySelectorAll("td,th").forEach(cell => row.push(cell.textContent.trim()));
+    if (row.length > 0) rows.push(row);
+  });
+  return rows;
+}
+
+function parseExcelSheet(wb) {
+  const sheet = wb.Sheets[wb.SheetNames[0]];
+  return XLSX.utils.sheet_to_json(sheet, { header:1, defval:"" });
+}
+
+async function readFeeSource(file) {
+  const text = await readFileAsText(file);
+  if (text.trim().startsWith("<")) return parseHtmlTable(text);
+  const ab = await readFileAsArrayBuffer(file);
+  const wb = XLSX.read(ab, { type:"array" });
+  return parseExcelSheet(wb);
+}
+
+async function readTransferSource(file) {
+  const ab = await readFileAsArrayBuffer(file);
+  const wb = XLSX.read(ab, { type:"array" });
+  return parseExcelSheet(wb);
+}
+
+async function readBeizhuFile(file) { return await readTransferSource(file); }
+
+// ============================================================
+// UI 绑定
+// ============================================================
+function bindDropZone(zoneId, fileInputId) {
+  const zone = $(zoneId), input = $(fileInputId);
+  if (!zone || !input) return;
+  zone.addEventListener("click", () => input.click());
+  zone.addEventListener("dragover", e => { e.preventDefault(); zone.classList.add("drag-over"); });
+  zone.addEventListener("dragleave", () => zone.classList.remove("drag-over"));
+  zone.addEventListener("drop", e => {
+    e.preventDefault();
+    zone.classList.remove("drag-over");
+    if (e.dataTransfer.files.length > 0) {
+      input.files = e.dataTransfer.files;
+      zone.textContent = e.dataTransfer.files[0].name;
+      zone.classList.add("has-file");
+    }
+  });
+  input.addEventListener("change", () => {
+    if (input.files.length > 0) {
+      zone.textContent = input.files[0].name;
+      zone.classList.add("has-file");
+    }
+  });
+}
+
+function bindBrowse(btnId, fileInputId) {
+  $(btnId).addEventListener("click", () => $(fileInputId).click());
+}
+
+// ============================================================
+// 年级面板
+// ============================================================
+function buildFeeGradePanel() {
+  const year = parseInt($("fee-year").value) || new Date().getFullYear();
+  const combos = getAllowedCombinations(year);
+  const maxProg = Math.max(...Object.values(PROGRAM_YEARS));
+  const allGrades = new Set();
+  for (let g = year; g >= year - maxProg - 2; g--) {
+    for (const [major, yrs] of Object.entries(PROGRAM_YEARS)) {
+      if (g + yrs < year) allGrades.add(g);
+    }
+  }
+  for (const g of Object.keys(combos)) allGrades.add(parseInt(g));
+
+  const panel = $("fee-grade-panel");
+  panel.innerHTML = "";
+  const sorted = [...allGrades].sort((a, b) => b - a);
+
+  for (const grade of sorted) {
+    const isNonGraduating = combos[grade] !== undefined;
+    const item = document.createElement("div");
+    item.className = "grade-item";
+
+    const cb = document.createElement("input");
+    cb.type = "checkbox";
+    cb.checked = isNonGraduating;
+    cb.dataset.grade = grade;
+    item.appendChild(cb);
+
+    const num = document.createElement("span");
+    num.className = "grade-num";
+    num.textContent = grade + " 级";
+    item.appendChild(num);
+
+    const majorsDiv = document.createElement("span");
+    majorsDiv.className = "grade-majors";
+    if (combos[grade]) {
+      combos[grade].forEach(m => {
+        const t = document.createElement("span");
+        t.className = "tag";
+        t.textContent = MAJOR_ABBR[m] || m;
+        majorsDiv.appendChild(t);
+      });
+    } else {
+      const graduatingMajors = [];
+      for (const [major, yrs] of Object.entries(PROGRAM_YEARS)) {
+        if (grade + yrs < year) graduatingMajors.push(MAJOR_ABBR[major] || major);
+      }
+      const t = document.createElement("span");
+      t.className = "tag graduated";
+      t.textContent = graduatingMajors.length > 0 ? graduatingMajors.join(" · ") + "（已毕业）" : "（已毕业）";
+      majorsDiv.appendChild(t);
+    }
+    item.appendChild(majorsDiv);
+    panel.appendChild(item);
+  }
+}
+
+function buildTransferGradePanel() {
+  const year = parseInt($("tr-year").value) || new Date().getFullYear();
+  const graduating = getGraduatingCombinations(year);
+  const maxProg = Math.max(...Object.values(PROGRAM_YEARS));
+  const minGrade = year - maxProg;
+  const allGrades = new Set();
+  for (let g = year; g >= minGrade; g--) {
+    for (const [major, yrs] of Object.entries(PROGRAM_YEARS)) allGrades.add(g);
+  }
+  for (const g of Object.keys(graduating)) allGrades.add(parseInt(g));
+
+  const panel = $("tr-grade-panel");
+  panel.innerHTML = "";
+  const sorted = [...allGrades].sort((a, b) => b - a);
+
+  for (const grade of sorted) {
+    const gradMajors = [];
+    const nonGradMajors = [];
+    for (const [major, yrs] of Object.entries(PROGRAM_YEARS)) {
+      if (grade + yrs <= year) gradMajors.push(major);
+      else nonGradMajors.push(major);
+    }
+    const isGraduating = gradMajors.length > 0;
+
+    const item = document.createElement("div");
+    item.className = "grade-item";
+
+    const cb = document.createElement("input");
+    cb.type = "checkbox";
+    cb.checked = isGraduating;
+    cb.dataset.grade = grade;
+    item.appendChild(cb);
+
+    const num = document.createElement("span");
+    num.className = "grade-num";
+    num.textContent = grade + " 级";
+    item.appendChild(num);
+
+    const majorsDiv = document.createElement("span");
+    majorsDiv.className = "grade-majors";
+    gradMajors.forEach(m => {
+      const t = document.createElement("span");
+      t.className = "tag";
+      t.textContent = (MAJOR_ABBR[m] || m) + "（已毕业）";
+      majorsDiv.appendChild(t);
+    });
+    nonGradMajors.forEach(m => {
+      const t = document.createElement("span");
+      t.className = "tag graduated";
+      t.textContent = (MAJOR_ABBR[m] || m) + "（未毕业）";
+      majorsDiv.appendChild(t);
+    });
+    item.appendChild(majorsDiv);
+    panel.appendChild(item);
+  }
+}
+
+function getFeeSelectedGrades() {
+  const year = parseInt($("fee-year").value) || new Date().getFullYear();
+  const allowed = getAllowedCombinations(year);
+  const selected = {};
+  $("fee-grade-panel").querySelectorAll("input[type=checkbox]").forEach(cb => {
+    const g = parseInt(cb.dataset.grade);
+    if (cb.checked && allowed[g]) selected[g] = allowed[g];
+  });
+  return Object.keys(selected).length > 0 ? selected : null;
+}
+
+function getTransferSelectedGrades() {
+  const year = parseInt($("tr-year").value) || new Date().getFullYear();
+  const graduating = getGraduatingCombinations(year);
+  const selected = {};
+  $("tr-grade-panel").querySelectorAll("input[type=checkbox]").forEach(cb => {
+    const g = parseInt(cb.dataset.grade);
+    if (cb.checked && graduating[g]) selected[g] = graduating[g];
+  });
+  return Object.keys(selected).length > 0 ? selected : null;
+}
+
+// ============================================================
+// 执行 — 团费
+// ============================================================
+async function runFee() {
+  const logW = $("fee-log");
+  logW.innerHTML = "";
+  const now = new Date();
+  const timeStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}-${String(now.getDate()).padStart(2,"0")} ${String(now.getHours()).padStart(2,"0")}:${String(now.getMinutes()).padStart(2,"0")}`;
+
+  log("═══════════════════════════════════════════", logW, "dim");
+  log(`  团费数据处理 · ${timeStr}`, logW, "header");
+  log("═══════════════════════════════════════════", logW, "dim");
+
+  const fileInput = $("fee-src-file");
+  if (!fileInput.files || fileInput.files.length === 0) {
+    log("✗ 请先选择源数据文件", logW, "err");
+    alert("请选择源数据文件");
+    return;
+  }
+  const file = fileInput.files[0];
+  const includeAll = $("fee-include-all").checked;
+  const year = parseInt($("fee-year").value) || new Date().getFullYear();
+  const selected = includeAll ? null : getFeeSelectedGrades();
+
+  log("", logW);
+  log(`年份: ${year}  ·  导出全部: ${includeAll ? "是" : "否"}  ·  源文件: ${file.name}`, logW);
+  if (!includeAll && selected) {
+    log(`勾选年级: ${Object.keys(selected).sort((a,b)=>b-a).join("、")}`, logW, "dim");
+  }
+
+  try {
+    const rows = await readFeeSource(file);
+    const data = rows.slice(1);
+    const { results, graduatingList, zeroUnpaidList, skippedGradeList, otherList, totalRows, classRows } =
+      processFee(data, year, includeAll, selected);
+
+    log("", logW);
+    log(`── 概览 ──────────────────────────`, logW, "dim");
+    log(`数据行: ${totalRows}  ·  班级团支部: ${classRows}  ·  输出: ${results.length}`, logW);
+
+    if (!includeAll && graduatingList.length > 0) {
+      log(`已毕业（过滤）: ${graduatingList.length} 个班级`, logW, "warn");
+    }
+    if (zeroUnpaidList.length > 0) {
+      log(`未交为 0（过滤）: ${zeroUnpaidList.length} 个班级`, logW, "dim");
+    }
+    if (!includeAll && skippedGradeList.length > 0) {
+      log(`年级未勾选: ${skippedGradeList.length} 个`, logW, "warn");
+    }
+
+    if (results.length > 0) {
+      const byYear = {};
+      results.forEach(r => {
+        if (!byYear[r.year]) byYear[r.year] = { count:0, unpaid:0 };
+        byYear[r.year].count++;
+        byYear[r.year].unpaid += r.unpaid;
+      });
+      log("", logW);
+      log("── 按年级 ────────────────────────", logW, "dim");
+      Object.keys(byYear).sort((a,b)=>b-a).forEach(y => {
+        log(`  ${y}级 · ${byYear[y].count} 个班 · 未交 ${byYear[y].unpaid} 人`, logW);
+      });
+    }
+
+    const outputName = generateOutputName(file.name, "团费通报");
+    await writeFeeExcel(results, outputName);
+    log("", logW);
+    log(`✓ 已下载: ${outputName}`, logW, "ok");
+    alert(`处理完成！共 ${results.length} 个未交团费班级。\n文件: ${outputName}`);
+
+  } catch (e) {
+    log("", logW);
+    log(`✗ 错误: ${e.message}`, logW, "err");
+    console.error(e);
+    alert(`处理失败: ${e.message}`);
+  }
+}
+
+// ============================================================
+// 执行 — 转接
+// ============================================================
+async function runTransfer() {
+  const logW = $("tr-log");
+  logW.innerHTML = "";
+  const now = new Date();
+  const timeStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}-${String(now.getDate()).padStart(2,"0")} ${String(now.getHours()).padStart(2,"0")}:${String(now.getMinutes()).padStart(2,"0")}`;
+
+  log("═══════════════════════════════════════════", logW, "dim");
+  log(`  毕业生转接处理 · ${timeStr}`, logW, "header");
+  log("═══════════════════════════════════════════", logW, "dim");
+
+  const srcInput = $("tr-src-file");
+  if (!srcInput.files || srcInput.files.length === 0) {
+    log("✗ 请先选择源数据文件", logW, "err");
+    alert("请选择源数据文件");
+    return;
+  }
+
+  const year = parseInt($("tr-year").value) || new Date().getFullYear();
+  const includeAll = $("tr-include-all").checked;
+  const selected = includeAll ? null : getTransferSelectedGrades();
+
+  log("", logW);
+  log(`年份: ${year}（5月规则）· 导出全部: ${includeAll ? "是" : "否"}  ·  源文件: ${srcInput.files[0].name}`, logW);
+  if (!includeAll && selected) {
+    log(`勾选年级: ${Object.keys(selected).sort((a,b)=>b-a).join("、")}`, logW, "dim");
+  }
+
+  try {
+    const srcRows = await readTransferSource(srcInput.files[0]);
+
+    let beizhuMap = {};
+    let beizhuAnomalies = [];
+    const bzInput = $("tr-bz-file");
+    if (bzInput.files && bzInput.files.length > 0) {
+      const bzRows = await readBeizhuFile(bzInput.files[0]);
+      const bzResult = parseBeizhu(bzRows);
+      beizhuMap = bzResult.map;
+      beizhuAnomalies = bzResult.anomalies;
+      log(`备注: ${bzInput.files[0].name}  ·  匹配人数: ${Object.keys(beizhuMap).length}`, logW, "dim");
+    } else {
+      log("备注: 未指定", logW, "dim");
+    }
+
+    const { results, totalRows, matchedCount, skippedGradeList, otherList } =
+      processTransfer(srcRows, beizhuMap, year, includeAll, selected);
+
+    log("", logW);
+    log(`── 概览 ──────────────────────────`, logW, "dim");
+    log(`数据行: ${totalRows}  ·  备注匹配: ${matchedCount} 人  ·  输出: ${results.length} 人`, logW);
+
+    if (beizhuAnomalies.length > 0) {
+      log("", logW);
+      log(`── 备注异常 ──────────────────────`, logW, "warn");
+      beizhuAnomalies.forEach(a => log(`  ! ${a}`, logW, "warn"));
+    }
+
+    if (!includeAll && skippedGradeList.length > 0) {
+      log(`年级未勾选: ${skippedGradeList.length} 人`, logW, "warn");
+    }
+
+    if (results.length > 0) {
+      const byYear = {};
+      results.forEach(r => {
+        if (!byYear[r.year]) byYear[r.year] = { count:0, classes:new Set() };
+        byYear[r.year].count++;
+        byYear[r.year].classes.add(r.className);
+      });
+      log("", logW);
+      log("── 按年级 ────────────────────────", logW, "dim");
+      Object.keys(byYear).sort((a,b)=>b-a).forEach(y => {
+        log(`  ${y}级 · ${byYear[y].count} 人 · ${byYear[y].classes.size} 个班`, logW);
+      });
+    }
+
+    const outputName = generateOutputName(srcInput.files[0].name, "转接名单");
+    await writeTransferExcel(results, outputName);
+    log("", logW);
+    log(`✓ 已下载: ${outputName}`, logW, "ok");
+
+    const notedCnt = results.filter(r => r.beizhu && r.beizhu.trim()).length;
+    const unnotedCnt = results.length - notedCnt;
+    alert(`处理完成！共 ${results.length} 名毕业生。\n已备注: ${notedCnt} 人  ·  未备注: ${unnotedCnt} 人\n\n文件: ${outputName}`);
+
+  } catch (e) {
+    log("", logW);
+    log(`✗ 错误: ${e.message}`, logW, "err");
+    console.error(e);
+    alert(`处理失败: ${e.message}`);
+  }
+}
+
+// ============================================================
+// 初始化
+// ============================================================
+function init() {
+  // Tabs
+  document.querySelectorAll(".tab-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+      document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+      btn.classList.add("active");
+      $(`tab-${btn.dataset.tab}`).classList.add("active");
+    });
+  });
+
+  // Year
+  const cy = new Date().getFullYear();
+  $("fee-year").value = cy;
+  $("tr-year").value = cy;
+  buildFeeGradePanel();
+  buildTransferGradePanel();
+  $("fee-year").addEventListener("change", buildFeeGradePanel);
+  $("tr-year").addEventListener("change", buildTransferGradePanel);
+
+  // File zones
+  bindDropZone("fee-src-zone", "fee-src-file");
+  bindDropZone("tr-src-zone", "tr-src-file");
+  bindDropZone("tr-bz-zone", "tr-bz-file");
+  bindBrowse("fee-src-browse", "fee-src-file");
+  bindBrowse("tr-src-browse", "tr-src-file");
+  bindBrowse("tr-bz-browse", "tr-bz-file");
+
+  // Actions
+  $("fee-run").addEventListener("click", runFee);
+  $("tr-run").addEventListener("click", runTransfer);
+}
+
+document.addEventListener("DOMContentLoaded", init);
+</script>
+</body>
+</html>

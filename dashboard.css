@@ -1,0 +1,425 @@
+/* 简约版水利团学工作台样式 */
+
+/* 全局样式 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #2563eb;
+    --primary-hover: #1d4ed8;
+    --bg-color: #f8fafc;
+    --card-bg: #ffffff;
+    --border-color: #e2e8f0;
+    --text-color: #1e293b;
+    --text-secondary: #64748b;
+    --success-color: #16a34a;
+    --warning-color: #ea580c;
+    --border-radius: 6px;
+    --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.5;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+/* 头部内容包装器 - 用于水平排列标题和知识库 */
+.header-content-wrapper {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 24px;
+    align-items: stretch;
+    width: 100%;
+}
+
+.header-content-wrapper .header {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+.header-content-wrapper .knowledge-banner {
+    flex: 1;
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 头部样式 */
+.header {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 32px;
+    margin-bottom: 0;
+    text-align: center;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.header-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.site-info h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-color);
+    margin-bottom: 4px;
+    letter-spacing: -0.5px;
+}
+
+.site-info p {
+    color: var(--text-secondary);
+    font-size: 16px;
+    font-weight: 400;
+}
+
+/* 快捷访问 */
+.quick-access {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.quick-link {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: var(--text-color);
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s;
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+}
+
+.quick-link:hover {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+}
+
+.quick-link i {
+    font-size: 14px;
+}
+
+.knowledge-banner {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 32px;
+    margin-bottom: 0;
+    box-shadow: var(--shadow);
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.knowledge-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+    width: 100%;
+    height: 100%;
+}
+
+.knowledge-image {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: var(--border-radius);
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+    background-color: #f0f0f0;
+}
+
+.knowledge-image:hover {
+    transform: scale(1.05);
+}
+
+/* 主内容区域 */
+#main-content {
+    margin-bottom: 20px;
+}
+
+/* 工具网格 */
+.items-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.nav-item {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 20px;
+    text-decoration: none;
+    color: var(--text-color);
+    transition: all 0.2s;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+}
+
+.nav-item:hover {
+    border-color: var(--primary-color);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+}
+
+.nav-item h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text-color);
+    line-height: 1.4;
+}
+
+.nav-item p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin-bottom: 12px;
+    flex-grow: 1;
+}
+
+.nav-item .status-tag {
+    align-self: flex-start;
+}
+
+.nav-item.developing {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.nav-item.developing:hover {
+    transform: none;
+    border-color: var(--border-color);
+}
+
+.status-tag {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.2;
+}
+
+.status-tag.dev {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.status-tag.external {
+    background-color: #dbeafe;
+    color: #1e40af;
+}
+
+.status-tag.internal {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+/* 页脚 */
+.footer {
+    text-align: center;
+    padding: 24px 16px;
+    border-top: 1px solid var(--border-color);
+    margin-top: 40px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    font-weight: 400;
+}
+
+/* 模态框 */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius);
+    padding: 24px;
+    max-width: 400px;
+    text-align: center;
+}
+
+.modal-content h3 {
+    margin-bottom: 8px;
+    font-size: 18px;
+}
+
+.modal-content p {
+    margin-bottom: 16px;
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+.modal-content button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.modal-content button:hover {
+    background-color: var(--primary-hover);
+}
+
+/* 加载状态 */
+.loading-indicator {
+    text-align: center;
+    padding: 40px;
+    color: var(--text-secondary);
+}
+
+.loading-text {
+    font-size: 14px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .container {
+        padding: 12px;
+    }
+    
+    /* 在小屏幕上将水平排列改为垂直排列 */
+    .header-content-wrapper {
+        flex-direction: column;
+    }
+    
+    .header-content-wrapper .knowledge-banner {
+        width: 100%;
+        margin-bottom: 24px;
+    }
+    
+    .header-content {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .knowledge-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 16px;
+    }
+    
+    .knowledge-image {
+        max-width: 100%;
+        max-height: 100%;
+        width: auto;
+        height: auto;
+        object-fit: contain;
+    }
+    
+    .items-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .quick-access {
+        justify-content: center;
+    }
+    
+    .nav-item {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    
+    .nav-item p {
+        flex-grow: 1;
+    }
+    
+    .nav-item .status-tag {
+        align-self: flex-start;
+    }
+}
+
+@media (max-width: 480px) {
+    .site-info h1 {
+        font-size: 18px;
+    }
+    
+    .knowledge-banner {
+        padding: 20px;
+        margin-bottom: 24px;
+    }
+    
+    .knowledge-content {
+        gap: 12px;
+    }
+    
+    .knowledge-image {
+        max-width: 100%;
+        max-height: 100%;
+        width: auto;
+        height: auto;
+        object-fit: contain;
+    }
+    
+    .nav-item {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    
+    .nav-item p {
+        flex-grow: 1;
+    }
+    
+    .nav-item .status-tag {
+        align-self: flex-start;
+    }
+}
